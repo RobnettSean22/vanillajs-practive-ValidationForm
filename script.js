@@ -16,9 +16,13 @@ showSuccess = input => {
   formControll.className = "form-controll success";
 };
 //check email validity
-validateEmail = email => {
+checkEmail = input => {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
+  if (re.test(input.value.trim())) {
+    showSuccess(input);
+  } else {
+    showError(input, "Email not valid");
+  }
 };
 //check length
 checkLength = (input, min, max) => {
@@ -46,10 +50,18 @@ checkRequired = inputArr => {
   });
 };
 
+checkPWMatch = (input1, input2) => {
+  input1.value === input2.value
+    ? showSuccess(input)
+    : showError(input2, "Passwords do not match.");
+};
+
 form.addEventListener("submit", function(e) {
   e.preventDefault();
 
   checkRequired([username, email, password, password2]);
   checkLength(username, 3, 15);
   checkLength(password, 6, 25);
+  checkEmail(email);
+  checkPWMatch(password, password2);
 });
